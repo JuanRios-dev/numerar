@@ -1,2 +1,4 @@
-/.vscode/
-/node_modules/
+# Dependency directories
+node_modules/
+.vscode
+.env
