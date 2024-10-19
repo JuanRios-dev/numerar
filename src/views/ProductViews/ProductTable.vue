@@ -96,6 +96,7 @@ export default {
                 iva_venta: '19.00',
                 precio: '',
                 categoria: '',
+                lots: [],
             };
             this.errors = {};
         },
@@ -119,7 +120,7 @@ export default {
         },
         editData(data) {
             this.form = { ...data };
-            this.errors = '';
+            this.errors = {};
             this.$refs.editModal.openModal();
         },
         async updateData() {

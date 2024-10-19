@@ -31,6 +31,9 @@ class ProductService {
       iva_venta: 'IVA de venta',
       precio: 'Precio',
       categoria: 'Categoría',
+      lots: 'Lotes',
+      'lots.numero': 'Número de Lote',
+      'lots.fecha_vencimiento': 'Fecha de Vencimiento',
     };
     return fieldLabels[field] || field;
   }
@@ -74,6 +77,9 @@ class ProductService {
       categoria: [
         validationRules.optional(),
       ],
+      lots: [
+        validationRules.optional(), // 'lots' puede ser opcional
+      ],
     };
 
     // Validación de cada campo
@@ -85,6 +91,23 @@ class ProductService {
       );
       if (error) errors[field] = error;
     });
+
+    // Validación específica para el array de 'lots'
+    if (Array.isArray(data.lots) && data.lots.length > 0) {
+      data.lots.forEach((lot, index) => {
+        const lotErrors = {};
+        if (!lot.numero) {
+          lotErrors.numero = `${this.getFieldLabel('lots.numero')} es requerido`;
+        }
+        if (!lot.fecha_vencimiento) {
+          lotErrors.fecha_vencimiento = `${this.getFieldLabel('lots.fecha_vencimiento')} es requerida`;
+        }
+        if (Object.keys(lotErrors).length > 0) {
+          errors[`lots_${index}`] = lotErrors;
+        }
+      });
+    }
+
 
     return errors;
   }
@@ -99,9 +122,15 @@ class ProductService {
     try {
       const formData = new FormData();
 
-      // Agrega todos los campos al FormData, incluyendo la imagen
       for (const key in data) {
-        formData.append(key, data[key]);
+        if (Array.isArray(data[key])) {
+          // Si el campo es un arreglo (como lots), añade cada elemento
+          data[key].forEach((lot) => {
+            formData.append(`lots[]`, JSON.stringify(lot)); // Serializa el objeto lote
+          });
+        } else {
+          formData.append(key, data[key]);
+        }
       }
 
       // Realiza la solicitud con FormData
@@ -129,12 +158,21 @@ class ProductService {
     }
 
     // Excluye el campo 'imagen' de productData
-    const { imagen, ...dataWithoutImage } = productData;
+    const { imagen, lots, ...dataWithoutImage } = productData;
 
     const formData = new FormData();
     for (const key in dataWithoutImage) {
       // Añade el campo al FormData tal cual, ya que los campos vacíos se envían como cadenas vacías
       formData.append(key, dataWithoutImage[key] || ''); // Si es falsy (incluido undefined o vacío), se añade como cadena vacía
+    }
+
+    if (Array.isArray(lots)) {
+      lots.forEach((lot, index) => {
+        for (const lotKey in lot) {
+          // Agrega cada propiedad del lote al FormData
+          formData.append(`lots[${index}][${lotKey}]`, lot[lotKey]);
+        }
+      });
     }
 
     try {
