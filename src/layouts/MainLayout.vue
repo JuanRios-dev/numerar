@@ -51,7 +51,7 @@
           Inventario
           <ul class="submenu">
             <li><router-link :to="{ name: 'products' }">Productos</router-link></li>
-            <li><a href="#">Movimientos</a></li>
+            <li><router-link :to="{ name: 'movements' }">Movimientos</router-link></li>
             <li><a href="#">Traslados</a></li>
             <li><a href="#">Compras</a></li>
           </ul>

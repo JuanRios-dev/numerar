@@ -26,3 +26,12 @@ export const showDeleteConfirmation = async (itemName, tableName) => {
     return false;
   }
 };
+
+export const showSuccessMessage = async (title, text) => {
+  await swalWithBootstrapButtons.fire({
+    title: title,
+    text: text,
+    icon: 'success',
+    confirmButtonText: 'Aceptar',
+  });
+};

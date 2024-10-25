@@ -51,6 +51,23 @@ const routes = [
   },
 
   {
+    path: '/movements',
+    name: 'movements',
+    component: () => import('@/views/MovementViews/MovementTable.vue'),
+    meta: {
+      requiredAuth: true
+    }
+  },
+  {
+    path: '/movements/create',
+    name: 'movements-create',
+    component: () => import('@/views/MovementViews/MovementCreate.vue'),
+    meta: {
+      requiredAuth: true
+    }
+  },
+
+  {
     path: '/companies',
     name: 'companies',
     component: () => import('@/views/CompanyViews/CompanyTable.vue'),

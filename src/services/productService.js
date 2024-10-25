@@ -5,6 +5,7 @@ import { showDeleteConfirmation } from './confirmDialog';
 class ProductService {
   constructor() {
     this.items = ref([]);
+    this.items_search = ref([]);
     this.item = ref({});
   }
 
